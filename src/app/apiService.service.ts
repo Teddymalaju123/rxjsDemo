@@ -9,6 +9,7 @@ import { catchError, map } from 'rxjs/operators';
 export class ApiService {
   private apiUrlProfile = 'http://103.13.31.37:17444/api/my/profile';
   private apiUrlTasks = 'http://103.13.31.37:17444/api/tasks';
+  
 
   constructor(private http: HttpClient) {}
 
@@ -21,6 +22,15 @@ export class ApiService {
 
   getTasksData(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrlTasks).pipe(
+      catchError(this.handleError),
+      map((data: any) => data)
+    );
+  }
+
+  getTasksID(id: number): Observable<any> {
+    const apiUrlGetTasksId = `http://103.13.31.37:17444/api/tasks/${id}`;
+  
+    return this.http.get(apiUrlGetTasksId).pipe(
       catchError(this.handleError),
       map((data: any) => data)
     );

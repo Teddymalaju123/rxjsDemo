@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, catchError, delay, throwError } from 'rxjs';
+import { Observable, Observer, Subscription, catchError, delay, forkJoin, throwError } from 'rxjs';
 import { ApiService } from '../apiService.service';
 
 @Component({
@@ -10,12 +10,23 @@ import { ApiService } from '../apiService.service';
 export class ProfileComponent {
   profileData$!: Observable<any>;
   tasksData$!: Observable<any[]>;
+  tasksIdData$!: Observable<any[]>;
 
   constructor(private dataService: ApiService) {}
+
+ 
 
   ngOnInit() {
     this.loadProfileData();
     this.loadTasksData();
+    const tasksDataId$: Observer<any> = {
+      next: (value: any) => console.log("tasksDataId next", value),
+      error: (err: any) => console.log("tasksDataId error", err),
+      complete: () => console.log("tasksDataId complete")
+    };
+    
+    this.tasksIdData$ = this.doubleRequestTask();
+    this.tasksIdData$.subscribe(tasksDataId$);
   }
 
   loadProfileData() {
@@ -37,4 +48,15 @@ export class ProfileComponent {
       })
     );
   }
+
+  doubleRequestTask() {
+    const tasks1$ = this.dataService.getTasksID(1);
+    const tasks2$ = this.dataService.getTasksID(2);
+    const tasks3$ = this.dataService.getTasksID(3);
+    return forkJoin([tasks1$, tasks2$, tasks3$]);
+  }
+  
+  
+  
 }
+
