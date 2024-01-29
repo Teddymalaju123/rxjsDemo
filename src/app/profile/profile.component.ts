@@ -25,7 +25,7 @@ export class ProfileComponent {
       complete: () => console.log("tasksDataId complete")
     };
     
-    this.tasksIdData$ = this.doubleRequestTask();
+    this.tasksIdData$ = this.tripleRequestTask();
     this.tasksIdData$.subscribe(tasksDataId$);
   }
 
@@ -49,7 +49,7 @@ export class ProfileComponent {
     );
   }
 
-  doubleRequestTask() {
+  tripleRequestTask() {
     const tasks1$ = this.dataService.getTasksID(1);
     const tasks2$ = this.dataService.getTasksID(2);
     const tasks3$ = this.dataService.getTasksID(3);
